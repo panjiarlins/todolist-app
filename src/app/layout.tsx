@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const popins = Poppins({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+})
 
 export const metadata: Metadata = {
   title: 'To Do List App',
@@ -11,12 +14,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  header,
 }: Readonly<{
   children: React.ReactNode
+  header: React.ReactNode
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${popins.className} mx-auto`}>
+        {header}
+        {children}
+      </body>
     </html>
   )
 }

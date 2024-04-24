@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${popins.className} mx-auto`}>
+      <body className={`${popins.className} min-w-64 bg-secondary`}>
         {header}
         {children}
       </body>

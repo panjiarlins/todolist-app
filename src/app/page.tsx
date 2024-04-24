@@ -1,15 +1,11 @@
+import { getTodos } from '@/actions/todo'
 import ActivityCard from '@/components/activity-card'
 import ActivityNotFound from '@/components/activity-not-found'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 
-export default function Home() {
-  const activities = [
-    { _id: '1', title: 'New Activity', createdAt: new Date().toISOString() },
-    { _id: '2', title: 'New Activity2', createdAt: new Date().toISOString() },
-    { _id: '3', title: 'New Activity3', createdAt: new Date().toISOString() },
-    { _id: '4', title: 'New Activity4', createdAt: new Date().toISOString() },
-  ]
+export default async function Home() {
+  const { data: activities } = await getTodos()
 
   return (
     <main className="mx-auto max-w-screen-lg px-8">
@@ -21,16 +17,16 @@ export default function Home() {
         </Button>
       </div>
 
-      {activities.length === 0 ? (
+      {!activities || activities.length === 0 ? (
         <ActivityNotFound />
       ) : (
         <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {activities.map((activity) => (
             <ActivityCard
-              key={activity._id}
-              id={activity._id}
+              key={activity.id}
+              id={activity.id}
               title={activity.title}
-              createdAt={activity.createdAt}
+              createdAt={activity.created_at}
             />
           ))}
         </div>

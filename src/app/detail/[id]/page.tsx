@@ -4,19 +4,21 @@ import ButtonBack from '@/components/detail/button-back'
 import ButtonSortTodoItem from '@/components/detail/button-sort-todo-item'
 import CardTodoItem from '@/components/detail/card-todo-item'
 import TodoItemNotFound from '@/components/detail/todo-item-not-found'
+import { getTodoItems } from '@/actions/todo-item'
+import { notFound } from 'next/navigation'
 
-export default function DetailPage({
+export default async function DetailPage({
   params: { id },
 }: {
   params: { id: string }
 }) {
-  const todoItems: Array<{
-    activity_group_id: number
-    id: number
-    is_active: number
-    priority: 'very-low' | 'low' | 'normal' | 'high' | 'very-high'
-    title: string
-  }> = []
+  const {
+    data: todoItems,
+    serverError,
+    validationErrors,
+  } = await getTodoItems({ todoId: Number(id) })
+
+  if (!!serverError || !!validationErrors) notFound()
 
   return (
     <main className="mx-auto max-w-screen-lg px-8">

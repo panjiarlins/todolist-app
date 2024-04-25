@@ -2,13 +2,14 @@
 
 import { action } from '@/lib/safe-action'
 import getErrorMessage from '@/utils/get-error-message'
+import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
 export const getTodos = action(z.void(), async () => {
-  await new Promise((resolve) => setTimeout(resolve, 4000))
-  const res = await fetch(process.env.API_GET_TODOS ?? '', {
-    cache: 'no-store',
-  })
+  const res = await fetch(
+    `${process.env.API_TODO}?email=${process.env.NEXT_PUBLIC_EMAIL}`,
+    { cache: 'no-store', next: { tags: ['getTodos'] } }
+  )
   if (!res.ok) throw new Error(await getErrorMessage(res))
 
   const {
@@ -18,3 +19,17 @@ export const getTodos = action(z.void(), async () => {
 
   return data
 })
+
+export const addTodo = action(
+  z.object({ title: z.string(), email: z.string() }),
+  async ({ title, email }) => {
+    const res = await fetch(`${process.env.API_TODO}`, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, email }),
+    })
+    if (!res.ok) throw new Error(await getErrorMessage(res))
+    revalidateTag('getTodos')
+  }
+)

@@ -1,8 +1,7 @@
 import { getTodos } from '@/actions/todo'
 import ActivityCard from '@/components/activity-card'
 import ActivityNotFound from '@/components/activity-not-found'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
+import AddTodoButton from '@/components/add-todo-button'
 
 export default async function Home() {
   const { data: activities } = await getTodos()
@@ -11,10 +10,7 @@ export default async function Home() {
     <main className="mx-auto max-w-screen-lg px-8">
       <div className="flex flex-col items-center gap-2 py-11 sm:flex-row">
         <div className="flex-1 text-4xl font-bold">Activity</div>
-        <Button className="flex flex-row gap-1 rounded-[45px] px-7 py-7">
-          <Plus />
-          <span className="text-lg font-semibold">Tambah</span>
-        </Button>
+        <AddTodoButton />
       </div>
 
       {!activities || activities.length === 0 ? (

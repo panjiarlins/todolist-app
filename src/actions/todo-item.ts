@@ -2,6 +2,7 @@
 
 import { action } from '@/lib/safe-action'
 import getErrorMessage from '@/utils/get-error-message'
+import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
 export const getTodoItems = action(
@@ -27,5 +28,27 @@ export const getTodoItems = action(
         title: string
       }>
     }
+  }
+)
+
+export const addTodoItem = action(
+  z.object({
+    todoId: z.number(),
+    title: z.string(),
+    priority: z.enum(['very-low', 'low', 'normal', 'high', 'very-high']),
+  }),
+  async ({ todoId, title, priority }) => {
+    const res = await fetch(`${process.env.API_TODO}/todo-items`, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        activity_group_id: todoId,
+        title,
+        priority,
+      }),
+    })
+    if (!res.ok) throw new Error(await getErrorMessage(res))
+    revalidateTag('getTodoItems')
   }
 )

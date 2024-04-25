@@ -1,25 +1,38 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '../ui/button'
 import { Pencil } from 'lucide-react'
+import { changeTodoTitle } from '@/actions/todo'
 
-export default function InputChangeTodoTitle() {
+export default function InputChangeTodoTitle({
+  todoId,
+  title,
+}: {
+  todoId: number
+  title: string
+}) {
+  const [newTitle, setNewTitle] = useState(title)
   const [isEditing, setIsEditing] = useState(false)
   const ref = useRef(null)
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+  const handleOutsideClick = useCallback(
+    async (e: MouseEvent) => {
       if (ref.current && !(ref.current as any).contains(e.target)) {
         setIsEditing(false)
+        if (title !== newTitle)
+          await changeTodoTitle({ id: todoId, title: newTitle })
       }
-    }
+    },
+    [todoId, newTitle, title]
+  )
 
+  useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick)
     }
-  }, [ref])
+  }, [handleOutsideClick])
 
   useEffect(() => {
     if (isEditing) (ref.current as any).focus()
@@ -29,7 +42,10 @@ export default function InputChangeTodoTitle() {
     <div className="flex flex-1 flex-row text-3xl font-bold">
       {isEditing ? (
         <input
-          defaultValue="test"
+          value={newTitle}
+          onChange={(e) => {
+            setNewTitle(e.target.value)
+          }}
           ref={ref}
           className="w-full overflow-auto border-b-2 bg-transparent outline-none"
         />
@@ -39,7 +55,7 @@ export default function InputChangeTodoTitle() {
             setIsEditing(true)
           }}
         >
-          Activity
+          {newTitle}
         </div>
       )}
 

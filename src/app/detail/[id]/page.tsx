@@ -12,30 +12,28 @@ export default async function DetailPage({
 }: {
   params: { id: string }
 }) {
-  const {
-    data: todoItems,
-    serverError,
-    validationErrors,
-  } = await getTodoItems({ todoId: Number(id) })
+  const { data, serverError, validationErrors } = await getTodoItems({
+    todoId: Number(id),
+  })
 
-  if (!!serverError || !!validationErrors) notFound()
+  if (!data || !!serverError || !!validationErrors) notFound()
 
   return (
     <main className="mx-auto max-w-screen-lg px-8">
       <div className="flex flex-col justify-center gap-2 py-11 sm:flex-row sm:items-center">
         <div className="flex w-full flex-row items-center justify-center gap-2">
           <ButtonBack />
-          <InputChangeTodoTitle />
+          <InputChangeTodoTitle todoId={data.id} title={data.title} />
           <ButtonSortTodoItem />
         </div>
         <ButtonAddTodoItem />
       </div>
 
-      {!todoItems || todoItems.length === 0 ? (
+      {!data.todo_items || data.todo_items.length === 0 ? (
         <TodoItemNotFound />
       ) : (
         <div className="flex flex-col gap-2">
-          {todoItems.map((todoItem) => (
+          {data.todo_items.map((todoItem) => (
             <CardTodoItem
               key={todoItem.id}
               id={todoItem.id}
@@ -46,21 +44,6 @@ export default async function DetailPage({
           ))}
         </div>
       )}
-
-      {/* {!activities || activities.length === 0 ? (
-        <ActivityNotFound />
-      ) : (
-        <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {activities.map((activity) => (
-            <ActivityCard
-              key={activity.id}
-              id={activity.id}
-              title={activity.title}
-              createdAt={activity.created_at}
-            />
-          ))}
-        </div>
-      )} */}
     </main>
   )
 }

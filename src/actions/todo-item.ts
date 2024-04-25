@@ -15,9 +15,10 @@ export const getTodoItems = action(
       }
     )
     if (!res.ok) throw new Error(await getErrorMessage(res))
-    const {
-      todo_items: todoItems,
-    }: {
+
+    return (await res.json()) as {
+      id: number
+      title: string
       todo_items: Array<{
         activity_group_id: number
         id: number
@@ -25,8 +26,6 @@ export const getTodoItems = action(
         priority: 'very-low' | 'low' | 'normal' | 'high' | 'very-high'
         title: string
       }>
-    } = await res.json()
-
-    return todoItems
+    }
   }
 )

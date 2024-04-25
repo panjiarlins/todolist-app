@@ -48,3 +48,18 @@ export const deleteTodo = action(
     revalidateTag('getTodos')
   }
 )
+
+export const changeTodoTitle = action(
+  z.object({ id: z.number(), title: z.string() }),
+  async ({ id, title }) => {
+    const res = await fetch(`${process.env.API_TODO}/activity-groups/${id}`, {
+      method: 'PATCH',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title }),
+    })
+    if (!res.ok) throw new Error(await getErrorMessage(res))
+    revalidateTag('getTodos')
+    revalidateTag('getTodoItems')
+  }
+)

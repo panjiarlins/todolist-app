@@ -7,7 +7,7 @@ import { Dialog, DialogClose, DialogPortal, DialogTrigger } from './ui/dialog'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { toast } from 'sonner'
 
-export default function DeleteTodoButton({
+export default function ButtonDeleteTodo({
   id,
   title,
   setIsDeleteButtonClicked,
@@ -25,7 +25,7 @@ export default function DeleteTodoButton({
           }}
           variant="outline"
           size="icon"
-          className="rounded-full"
+          className="rounded-full border-none"
         >
           <Trash2 />
         </Button>

@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import DeleteTodoButton from './delete-todo-button'
+import ButtonDeleteTodo from './button-delete-todo'
 
-export default function ActivityCard({
+export default function CardTodo({
   id,
   title,
   createdAt,
@@ -27,7 +27,7 @@ export default function ActivityCard({
       className="flex aspect-square cursor-pointer flex-col justify-between rounded-xl bg-background p-6 shadow-md"
     >
       <div className="text-lg font-bold">{title}</div>
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center text-muted-foreground">
         <span className="flex-1 text-sm font-medium">
           {new Date(createdAt).toLocaleDateString('id-ID', {
             day: 'numeric',
@@ -35,7 +35,7 @@ export default function ActivityCard({
             year: 'numeric',
           })}
         </span>
-        <DeleteTodoButton
+        <ButtonDeleteTodo
           id={id}
           title={title}
           setIsDeleteButtonClicked={setIsDeleteButtonClicked}

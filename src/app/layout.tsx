@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
+import { Toaster } from '@/components/ui/sonner'
 
 const popins = Poppins({
   subsets: ['latin'],
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={`${popins.className} min-w-64 bg-secondary`}>
         {header}
         {children}
+        <Toaster richColors closeButton position="top-center" theme="light" />
       </body>
     </html>
   )

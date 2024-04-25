@@ -1,21 +1,20 @@
 'use client'
 
-import { Trash2 } from 'lucide-react'
-import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import DeleteTodoButton from './delete-todo-button'
 
 export default function ActivityCard({
   id,
   title,
   createdAt,
 }: {
-  id: string
+  id: number
   title: string
   createdAt: string
 }) {
   const router = useRouter()
-  const [isDeleteButtonClicked, setIsDeleteButtonClicked] = useState(false)
+  const [, setIsDeleteButtonClicked] = useState(false)
 
   return (
     <div
@@ -36,18 +35,11 @@ export default function ActivityCard({
             year: 'numeric',
           })}
         </span>
-        <Button
-          onClick={() => {
-            console.log(isDeleteButtonClicked)
-            setIsDeleteButtonClicked(true)
-            // TODO: handle delete
-          }}
-          variant="outline"
-          size="icon"
-          className="rounded-full"
-        >
-          <Trash2 />
-        </Button>
+        <DeleteTodoButton
+          id={id}
+          title={title}
+          setIsDeleteButtonClicked={setIsDeleteButtonClicked}
+        />
       </div>
     </div>
   )

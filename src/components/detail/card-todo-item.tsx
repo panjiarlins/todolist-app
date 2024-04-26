@@ -1,10 +1,11 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Button } from '../ui/button'
 import { Pencil } from 'lucide-react'
 import ButtonDeleteTodoItem from './button-delete-todo-item'
 import { priorities } from '../../utils/constant'
+import { updateTodoItem } from '@/actions/todo-item'
 
 export default function CardTodoItem({
   id,
@@ -17,6 +18,8 @@ export default function CardTodoItem({
   priority: 'very-low' | 'low' | 'normal' | 'high' | 'very-high'
   title: string
 }) {
+  const [newStatus, setNewStatus] = useState(isActive)
+
   const priorityColor = useMemo(
     () => priorities.find((p) => p.value === priority)?.color,
     [priority]
@@ -27,10 +30,11 @@ export default function CardTodoItem({
       <div className="flex flex-row items-center gap-6">
         <input
           type="checkbox"
-          checked={!isActive}
+          defaultChecked={!isActive}
           className="size-6"
-          onChange={() => {
-            // TODO : handle change todo item status
+          onChange={async () => {
+            setNewStatus(!isActive)
+            await updateTodoItem({ id, isActive: !isActive })
           }}
         />
         <div
@@ -38,7 +42,7 @@ export default function CardTodoItem({
           style={{ backgroundColor: priorityColor }}
         />
         <div
-          className={`${isActive ? '' : 'text-muted-foreground line-through'} text-lg font-medium`}
+          className={`${newStatus ? '' : 'text-muted-foreground line-through'} text-lg font-medium`}
         >
           {title}
         </div>

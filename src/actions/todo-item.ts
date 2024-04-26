@@ -52,3 +52,30 @@ export const addTodoItem = action(
     revalidateTag('getTodoItems')
   }
 )
+
+export const updateTodoItem = action(
+  z.object({
+    id: z.number(),
+    isActive: z.boolean().optional(),
+    title: z.string().optional(),
+    priority: z
+      .enum(['very-low', 'low', 'normal', 'high', 'very-high'])
+      .optional(),
+  }),
+  async ({ id, isActive, title, priority }) => {
+    const newData = Object.fromEntries(
+      Object.entries({ is_active: Number(isActive), title, priority }).filter(
+        ([, v]) => v !== undefined && !Number.isNaN(v)
+      )
+    )
+
+    const res = await fetch(`${process.env.API_TODO}/todo-items/${id}`, {
+      method: 'PATCH',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newData),
+    })
+    if (!res.ok) throw new Error(await getErrorMessage(res))
+    revalidateTag('getTodoItems')
+  }
+)

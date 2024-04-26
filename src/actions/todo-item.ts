@@ -6,8 +6,11 @@ import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
 export const getTodoItems = action(
-  z.object({ todoId: z.number() }),
-  async ({ todoId }) => {
+  z.object({
+    todoId: z.number(),
+    sortBy: z.enum(['newest', 'oldest', 'a-z', 'z-a', 'incomplete']).optional(),
+  }),
+  async ({ todoId, sortBy }) => {
     const res = await fetch(
       `${process.env.API_TODO}/activity-groups/${todoId}`,
       {
@@ -17,9 +20,10 @@ export const getTodoItems = action(
     )
     if (!res.ok) throw new Error(await getErrorMessage(res))
 
-    return (await res.json()) as {
+    const data = (await res.json()) as {
       id: number
       title: string
+      created_at: string
       todo_items: Array<{
         activity_group_id: number
         id: number
@@ -28,6 +32,27 @@ export const getTodoItems = action(
         title: string
       }>
     }
+
+    switch (sortBy) {
+      case 'newest':
+        break
+      case 'oldest':
+        data.todo_items.reverse()
+        break
+      case 'a-z':
+        data.todo_items.sort((a, b) => a.title.localeCompare(b.title))
+        break
+      case 'z-a':
+        data.todo_items.sort((a, b) => b.title.localeCompare(a.title))
+        break
+      case 'incomplete':
+        data.todo_items.sort(
+          (a, b) => Number(b.is_active) - Number(a.is_active)
+        )
+        break
+    }
+
+    return data
   }
 )
 

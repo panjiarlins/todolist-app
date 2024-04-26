@@ -27,7 +27,7 @@ export default function CardTodoItem({
   )
 
   return (
-    <div className="flex flex-row items-center justify-between gap-2 rounded-2xl bg-background px-6 py-5 shadow-lg">
+    <div className="flex flex-row items-center justify-between gap-2 overflow-auto rounded-2xl bg-background px-6 py-5 shadow-lg">
       <div className="flex flex-row items-center gap-6">
         <input
           type="checkbox"
@@ -43,7 +43,7 @@ export default function CardTodoItem({
           style={{ backgroundColor: priorityColor }}
         />
         <div
-          className={`${newStatus ? '' : 'text-muted-foreground line-through'} text-lg font-medium`}
+          className={`${newStatus ? '' : 'text-muted-foreground line-through'} text-wrap text-lg font-medium`}
         >
           {title}
         </div>

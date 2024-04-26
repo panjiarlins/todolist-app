@@ -7,13 +7,18 @@ import TodoItemNotFound from '@/components/detail/todo-item-not-found'
 import { getTodoItems } from '@/actions/todo-item'
 import { notFound } from 'next/navigation'
 
+type SortType = 'newest' | 'oldest' | 'a-z' | 'z-a' | 'incomplete'
+
 export default async function DetailPage({
   params: { id },
+  searchParams: { sortBy },
 }: {
   params: { id: string }
+  searchParams: { sortBy: SortType }
 }) {
   const { data, serverError, validationErrors } = await getTodoItems({
     todoId: Number(id),
+    sortBy,
   })
 
   if (!data || !!serverError || !!validationErrors) notFound()

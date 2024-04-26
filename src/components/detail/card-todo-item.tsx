@@ -6,6 +6,7 @@ import { Pencil } from 'lucide-react'
 import ButtonDeleteTodoItem from './button-delete-todo-item'
 import { priorities } from '../../utils/constant'
 import { updateTodoItem } from '@/actions/todo-item'
+import DialogUpdateTodoItem from './dialog-update-todo-item'
 
 export default function CardTodoItem({
   id,
@@ -46,14 +47,15 @@ export default function CardTodoItem({
         >
           {title}
         </div>
-        <Button
-          onClick={() => {}}
-          variant="ghost"
-          size="icon"
-          className="rounded-full text-muted-foreground"
-        >
-          <Pencil className="size-4" />
-        </Button>
+        <DialogUpdateTodoItem id={id} title={title} priority={priority}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground"
+          >
+            <Pencil className="size-4" />
+          </Button>
+        </DialogUpdateTodoItem>
       </div>
       <ButtonDeleteTodoItem id={id} />
     </div>

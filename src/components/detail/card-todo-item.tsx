@@ -57,7 +57,7 @@ export default function CardTodoItem({
           </Button>
         </DialogUpdateTodoItem>
       </div>
-      <ButtonDeleteTodoItem id={id} />
+      <ButtonDeleteTodoItem id={id} title={title} />
     </div>
   )
 }

@@ -79,3 +79,15 @@ export const updateTodoItem = action(
     revalidateTag('getTodoItems')
   }
 )
+
+export const deleteTodoItem = action(
+  z.object({ id: z.number() }),
+  async ({ id }) => {
+    const res = await fetch(`${process.env.API_TODO}/todo-items/${id}`, {
+      method: 'DELETE',
+      cache: 'no-store',
+    })
+    if (!res.ok) throw new Error(await getErrorMessage(res))
+    revalidateTag('getTodoItems')
+  }
+)

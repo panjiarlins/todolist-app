@@ -6,8 +6,9 @@ import { Trash2, TriangleAlert } from 'lucide-react'
 import { Dialog, DialogClose, DialogPortal, DialogTrigger } from './ui/dialog'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { toast } from 'sonner'
+import { useAction } from 'next-safe-action/hooks'
 
-export default function DeleteTodoButton({
+export default function ButtonDeleteTodo({
   id,
   title,
   setIsDeleteButtonClicked,
@@ -16,6 +17,18 @@ export default function DeleteTodoButton({
   title: string
   setIsDeleteButtonClicked: React.Dispatch<React.SetStateAction<boolean>>
 }) {
+  const { execute, status } = useAction(deleteTodo, {
+    onExecute: () => {
+      toast.loading('Deleting activity', { id, duration: Infinity })
+    },
+    onError: () => {
+      toast.error('Failed to delete activity', { id, duration: 3000 })
+    },
+    onSuccess: () => {
+      toast.success('Activity is deleted successfully', { id, duration: 3000 })
+    },
+  })
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,7 +38,7 @@ export default function DeleteTodoButton({
           }}
           variant="outline"
           size="icon"
-          className="rounded-full"
+          className="rounded-full border-none"
         >
           <Trash2 />
         </Button>
@@ -52,6 +65,7 @@ export default function DeleteTodoButton({
           <div className="flex flex-row items-center justify-center gap-4">
             <DialogClose asChild>
               <Button
+                disabled={status === 'executing'}
                 variant="secondary"
                 className="rounded-[45px] px-8 py-6 text-lg font-semibold"
               >
@@ -59,21 +73,9 @@ export default function DeleteTodoButton({
               </Button>
             </DialogClose>
             <Button
-              onClick={async () => {
-                toast.loading('Deleting activity', { id, duration: Infinity })
-                const { serverError, validationErrors } = await deleteTodo({
-                  id,
-                })
-                if (!serverError || !validationErrors)
-                  toast.success('Activity is deleted successfully', {
-                    id,
-                    duration: 3000,
-                  })
-                else
-                  toast.error('Failed to delete activity', {
-                    id,
-                    duration: 3000,
-                  })
+              disabled={status === 'executing'}
+              onClick={() => {
+                execute({ id })
               }}
               variant="destructive"
               className="rounded-[45px] px-8 py-6 text-lg font-semibold"

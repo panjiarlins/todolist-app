@@ -4,7 +4,7 @@ import { addTodo } from '@/actions/todo'
 import { Button } from './ui/button'
 import { Plus } from 'lucide-react'
 
-export default function AddTodoButton() {
+export default function ButtonAddTodo() {
   return (
     <Button
       onClick={async () => {
